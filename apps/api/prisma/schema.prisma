@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String       @id @default(uuid())
+  email          String       @unique
+  passwordHash   String
+  firstName      String?
+  lastName       String?
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  requests       Request[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("users")
+}
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  users     User[]
+  workflows Workflow[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("organizations")
+}
+
+model Workflow {
+  id             String       @id @default(uuid())
+  name           String
+  description    String?
+  definition     Json
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  requests       Request[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@map("workflows")
+}
+
+model Request {
+  id          String   @id @default(uuid())
+  workflowId  String
+  workflow    Workflow @relation(fields: [workflowId], references: [id])
+  requesterId String
+  requester   User     @relation(fields: [requesterId], references: [id])
+  status      String   @default("PENDING") // PENDING, APPROVED, REJECTED, CANCELLED
+  input       Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([workflowId])
+  @@index([requesterId])
+  @@index([status])
+  @@index([workflowId, status])
+  @@map("requests")
+}
