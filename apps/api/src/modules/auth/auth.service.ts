@@ -3,6 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { z } from 'zod';
+import { User } from '../../generated/prisma/client';
 
 export const LoginDto = z.object({
   email: z.string().email(),
@@ -26,10 +27,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(email: string, pass: string): Promise<Omit<User, 'passwordHash'> | null> {
     const user = await this.userService.findOne(email);
     if (user && (await bcrypt.compare(pass, user.passwordHash))) {
-      const { passwordHash, ...result } = user;
+      const { passwordHash: _passwordHash, ...result } = user;
       return result;
     }
     return null;
@@ -53,7 +54,7 @@ export class AuthService {
       firstName: input.firstName ?? null,
       lastName: input.lastName ?? null,
     });
-    const { passwordHash, ...result } = user;
+    const { passwordHash: _passwordHash, ...result } = user;
     return result;
   }
 }

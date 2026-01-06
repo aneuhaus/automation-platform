@@ -11,7 +11,7 @@ import { WorkflowService } from './workflow.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../../common/decorators/current-user.decorator';
 import { CreateWorkflowInputSchema } from '@automation-platform/contracts';
-import { z } from 'zod';
+import { User } from '../../generated/prisma/client';
 
 @Controller('workflows')
 @UseGuards(JwtAuthGuard)
@@ -19,7 +19,7 @@ export class WorkflowController {
   constructor(private readonly workflowService: WorkflowService) {}
 
   @Post()
-  create(@CurrentUser() user: any, @Body() body: unknown) {
+  create(@CurrentUser() user: User, @Body() body: unknown) {
     if (!user.organizationId) {
       throw new UnauthorizedException('User does not belong to an organization');
     }
@@ -28,7 +28,7 @@ export class WorkflowController {
   }
 
   @Get()
-  findAll(@CurrentUser() user: any) {
+  findAll(@CurrentUser() user: User) {
     if (!user.organizationId) {
       return [];
     }
@@ -36,7 +36,7 @@ export class WorkflowController {
   }
 
   @Get(':id')
-  findOne(@CurrentUser() user: any, @Param('id') id: string) {
+  findOne(@CurrentUser() user: User, @Param('id') id: string) {
     if (!user.organizationId) {
       throw new UnauthorizedException('User does not belong to an organization');
     }
