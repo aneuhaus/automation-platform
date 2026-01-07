@@ -4,5 +4,5 @@ export default function Home() {
       <h1>Automation Platform</h1>
       <a href="/login">Login</a>
     </main>
-  );
+  )
 }

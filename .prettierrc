@@ -1,6 +1,7 @@
 {
-  "semi": true,
+  "semi": false,
   "singleQuote": true,
   "trailingComma": "all",
-  "printWidth": 100
+  "printWidth": 80,
+  "ignore": [".next/**", "dist/**", "node_modules/**"]
 }

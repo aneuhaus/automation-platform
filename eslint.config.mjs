@@ -1,6 +1,6 @@
-import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
-import globals from "globals";
+import eslint from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import globals from 'globals'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -14,17 +14,17 @@ export default tseslint.config(
     },
     rules: {
       // Allow underscore-prefixed variables to be unused (common pattern for destructuring)
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
-          caughtErrorsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
         },
       ],
     },
   },
   {
-    ignores: ["**/dist/**", "**/node_modules/**", "**/.next/**"],
-  }
-);
+    ignores: ['**/dist/**', '**/node_modules/**', '**/.next/**'],
+  },
+)

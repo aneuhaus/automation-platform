@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../../common/prisma.service';
-import { Prisma } from '../../generated/prisma/client.js';
-import * as bcrypt from 'bcrypt';
+import { Injectable } from '@nestjs/common'
+import { PrismaService } from '../../common/prisma.service'
+import { Prisma } from '../../generated/prisma/client.js'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -10,18 +10,18 @@ export class UserService {
   async findOne(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
-    });
+    })
   }
 
   async findById(id: string) {
     return this.prisma.user.findUnique({
       where: { id },
-    });
+    })
   }
 
   async createUser(data: Prisma.UserCreateInput) {
-    const salt = await bcrypt.genSalt();
-    const passwordHash = await bcrypt.hash(data.passwordHash, salt);
+    const salt = await bcrypt.genSalt()
+    const passwordHash = await bcrypt.hash(data.passwordHash, salt)
 
     return this.prisma.user.create({
       data: {
@@ -30,6 +30,6 @@ export class UserService {
         firstName: data.firstName ?? null,
         lastName: data.lastName ?? null,
       },
-    });
+    })
   }
 }

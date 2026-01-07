@@ -1,6 +1,6 @@
-import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '../generated/prisma/client';
-import { PrismaPg } from '@prisma/adapter-pg';
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common'
+import { PrismaClient } from '../generated/prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 @Injectable()
 export class PrismaService
@@ -8,27 +8,27 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor() {
-    const { DATABASE_URL } = process.env;
+    const { DATABASE_URL } = process.env
     if (!DATABASE_URL) {
-      throw new Error('DATABASE_URL is not defined, .env not loaded?');
+      throw new Error('DATABASE_URL is not defined, .env not loaded?')
     }
     const adapter = new PrismaPg({
       connectionString: DATABASE_URL,
-    });
-    super({ adapter });
+    })
+    super({ adapter })
   }
 
   async onModuleInit() {
-    await this.$connect();
+    await this.$connect()
   }
 
   async onModuleDestroy() {
-    await this.$disconnect();
+    await this.$disconnect()
   }
 
   async executeInTransaction<T>(
     fn: (tx: PrismaClient) => Promise<T>,
   ): Promise<T> {
-    return this.$transaction((tx) => fn(tx as PrismaClient));
+    return this.$transaction((tx) => fn(tx as PrismaClient))
   }
 }

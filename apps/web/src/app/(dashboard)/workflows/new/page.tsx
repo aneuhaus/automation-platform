@@ -1,21 +1,24 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateWorkflowInputSchema, CreateWorkflowInput } from "@automation-platform/contracts";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import {
+  CreateWorkflowInputSchema,
+  CreateWorkflowInput,
+} from '@automation-platform/contracts'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { ArrowLeft, Loader2 } from 'lucide-react'
+import Link from 'next/link'
 
 export default function CreateWorkflowPage() {
-  const router = useRouter();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
 
   const {
     register,
@@ -24,50 +27,39 @@ export default function CreateWorkflowPage() {
   } = useForm<CreateWorkflowInput>({
     resolver: zodResolver(CreateWorkflowInputSchema),
     defaultValues: {
-      name: "",
-      description: "",
+      name: '',
+      description: '',
       definition: {}, // Default empty object for workflow definition
     },
-  });
+  })
 
   const onSubmit = async (data: CreateWorkflowInput) => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/workflows`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${document.cookie.split("; ").find(row => row.startsWith("auth_token="))?.split("=")[1] || ""}`
-        },
+      const proxyResponse = await fetch('/api/workflows', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
-      });
-
-      // Wait, I should use the apiClient here but it's server-only or needs client use!
-      // Actually my apiClient uses getAuthToken which uses cookies() (server-only).
-      // I should call a local API route or update apiClient to be isomorphic.
-      // For now I'll use a direct fetch or create a client-safe fetch.
-      
-      // Let's use the login pattern: call a local Next.js API route that proxies.
-      const proxyResponse = await fetch("/api/workflows", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      })
 
       if (!proxyResponse.ok) {
-        const errorData = await proxyResponse.json();
-        throw new Error(errorData.message || "Failed to create workflow");
+        const errorData = await proxyResponse.json()
+        throw new Error(errorData.message || 'Failed to create workflow')
       }
 
-      router.push("/workflows");
-      router.refresh();
-    } catch (err: any) {
-      setError(err.message);
+      router.push('/workflows')
+      router.refresh()
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message)
+      } else {
+        setError('An unknown error occurred')
+      }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-8">
@@ -79,7 +71,9 @@ export default function CreateWorkflowPage() {
         </Button>
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Create Workflow</h1>
-          <p className="text-slate-500 mt-1">Define your automation logic and triggers.</p>
+          <p className="text-slate-500 mt-1">
+            Define your automation logic and triggers.
+          </p>
         </div>
       </div>
 
@@ -96,7 +90,7 @@ export default function CreateWorkflowPage() {
             <Input
               id="name"
               placeholder="e.g., Customer Onboarding"
-              {...register("name")}
+              {...register('name')}
             />
             {errors.name && (
               <p className="text-xs text-red-500">{errors.name.message}</p>
@@ -109,10 +103,12 @@ export default function CreateWorkflowPage() {
               id="description"
               placeholder="What does this workflow do?"
               className="min-h-[100px]"
-              {...register("description")}
+              {...register('description')}
             />
             {errors.description && (
-              <p className="text-xs text-red-500">{errors.description.message}</p>
+              <p className="text-xs text-red-500">
+                {errors.description.message}
+              </p>
             )}
           </div>
 
@@ -128,11 +124,15 @@ export default function CreateWorkflowPage() {
               defaultValue="{}"
               onChange={(e) => {
                 try {
-                  const val = JSON.parse(e.target.value);
-                  // Since register doesn't handle JSON parse automatically here easily, 
-                  // we might want a custom field or just simple validation.
-                  // For the MVP, we'll keep it simple.
-                } catch (e) {}
+                  const val = JSON.parse(e.target.value)
+                  console.log(val)
+                } catch (err: unknown) {
+                  if (err instanceof Error) {
+                    setError(err.message)
+                  } else {
+                    setError('An unknown error occurred')
+                  }
+                }
               }}
             />
           </div>
@@ -149,5 +149,5 @@ export default function CreateWorkflowPage() {
         </form>
       </div>
     </div>
-  );
+  )
 }

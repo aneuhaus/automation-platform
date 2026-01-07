@@ -1,16 +1,16 @@
-import { redirect } from "next/navigation";
-import { isAuthenticated } from "@/lib/auth";
-import { Nav } from "@/components/nav";
+import { redirect } from 'next/navigation'
+import { isAuthenticated } from '@/lib/auth'
+import { Nav } from '@/components/nav'
 
 export default async function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
-  const isAuth = await isAuthenticated();
+  const isAuth = await isAuthenticated()
 
   if (!isAuth) {
-    redirect("/login");
+    redirect('/login')
   }
 
   return (
@@ -20,5 +20,5 @@ export default async function DashboardLayout({
         {children}
       </main>
     </div>
-  );
+  )
 }

@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm -r build",
+    "dev": "pnpm --filter \"*\" --parallel dev",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
     "format": "prettier --write ."
@@ -14,5 +15,5 @@
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.52.0"
   },
-  "packageManager": "pnpm@9.0.0"
+  "packageManager": "pnpm@10.27.0"
 }
