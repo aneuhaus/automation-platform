@@ -2,6 +2,5 @@
   "semi": false,
   "singleQuote": true,
   "trailingComma": "all",
-  "printWidth": 80,
-  "ignore": [".next/**", "dist/**", "node_modules/**"]
+  "printWidth": 80
 }
