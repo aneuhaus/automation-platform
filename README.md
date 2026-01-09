@@ -41,12 +41,7 @@ pnpm build
 ### Development
 
 ```bash
-# Run API (defaults to localhost:3000)
-cd apps/api
-pnpm start:dev
-
-# Run Web (defaults to localhost:3001 or 3000)
-cd apps/web
+# Run API & Web
 pnpm dev
 ```
 
