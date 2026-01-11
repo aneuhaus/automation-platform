@@ -8,6 +8,7 @@
     "start:dev": "nest start --watch",
     "dev": "pnpm start:dev",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
+    "generate": "prisma generate",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
